@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>module</title>
+    <style>
+        #container {
+            max-width: 978px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        .msg {
+            border: 1px solid #ddd;
+            border-bottom-right-radius: 3px;
+            border-bottom-left-radius: 3px;
+            padding: 10px;
+            margin: 10px;
+        }
+        .msg .text {
+            text-align: center;
+        }
+        .msg.got {
+            background-color: lightgray;
+        }
+        .msg.init {
+            background-color: lightgoldenrodyellow;
+        }
+        .msg.process {
+            background-color: lightblue;
+        }
+        .msg.execute {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<script src="../amd-module.js"></script>
+<script>
+    const messageTemplate = [
+        '<div class="msg ${type}">',
+        '<span class="text">${text}</span>',
+        '<pre class="detail">${detail}</pre>',
+        '</div>',
+    ].join('');
+    const containerElement = document.getElementById('container');
+    const msgs = [];
+    function insertMessage(text, detail, type) {
+        msgs.push({
+            text: text,
+            detail: detail,
+            type: type
+        });
+    }
+    function renderMessage(msg) {
+        if (msg) {
+            const oldInnerHTML = containerElement.innerHTML;
+            const newMessage = messageTemplate
+                    .replace('${text}', msg.text)
+                    .replace('${detail}', JSON.stringify(msg.detail, null, '\t'))
+                    .replace('${type}', msg.type);
+            containerElement.innerHTML = oldInnerHTML + newMessage;
+        }
+    }
+    setInterval(function () {
+        if (msgs.length) {
+            renderMessage(msgs.shift());
+        }
+    }, 500);
+    AMDModule.on('module-meta-got', function (meta) {
+        insertMessage('meta got!!', meta, 'got');
+        // console.log('meta got!!', meta);
+    });
+    AMDModule.on('module-initialised', function (mod) {
+        insertMessage('initialised!!', mod, 'init');
+        // console.log('initialised!!', mod);
+    });
+    AMDModule.on('module-deps-processed', function (mod) {
+        insertMessage('deps processed!!', mod, 'process');
+        // console.log('deps processed!!', mod);
+    });
+    AMDModule.on('module-executed', function (mod) {
+        insertMessage('executed!!', mod, 'execute');
+        // console.log('executed!!', mod);
+    });
+    console.log(AMDModule, AMDModule.events);
+</script>
+<script src="module/moduleC.js"></script>
+<script src="module/moduleD.js"></script>
+<script>
+    define([
+        './module/moduleB'
+    ], function (moduleB) {
+        console.log('loaded ' + moduleB);
+    });
+    define([
+        './module/moduleC'
+    ], function (moduleC) {
+        console.log('loaded ' + moduleC);
+    });
+</script>
+</body>
+</html>

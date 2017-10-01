@@ -1,0 +1,28 @@
+{
+  "name": "amd-module",
+  "version": "0.0.1",
+  "description": "yet another AMD loader",
+  "main": "amd-module.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangyu-kelly/amd-module.git"
+  },
+  "keywords": [
+    "AMD",
+    "loader",
+    "js"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wangyu-kelly/amd-module/issues"
+  },
+  "homepage": "https://github.com/wangyu-kelly/amd-module#readme",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "wolfy87-eventemitter": "^5.2.2"
+  }
+}
